@@ -9,12 +9,14 @@ This tool is a work in progress and is mainly for my own personal use. This was 
 
 * Usage
 
-- toki new projectname  - creates new projects ( new -a for assembly project )
-- toki build            - builds the project using the Makefile
-- toki run              - runs the project using make
-- toki clean            - cleans up the obj and binary files from build folder
-- toki debug            - opens gdb for debugging
-- toki gen              - generate a flake.nix or Makefile
+#+begin_src bash
+toki new projectname  - creates new projects ( new -a for assembly project )
+toki build            - builds the project using the Makefile
+toki run              - runs the project using make
+toki clean            - cleans up the obj and binary files from build folder
+toki debug            - opens gdb for debugging
+toki gen              - generate a flake.nix or Makefile
+#+end_src
 
 Run ~toki --help~ or ~toki /command/ --help~ for more info.
 
