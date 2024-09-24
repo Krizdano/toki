@@ -24,6 +24,7 @@ debug: all
 all: $(BIN)
 
 $(BIN): $(OBJS)
+	mkdir -p $(@D)
 	$(CC) $(CFLAGS) $(OBJS) -o $@
 
 $(OBJ)/%.o: src/%.c
