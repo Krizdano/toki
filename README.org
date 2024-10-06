@@ -51,4 +51,41 @@ If you want to build with flakes support run
 #+end_src
 
 ** Nix Flakes
-  TODO
+*** Nix Run
+Run it directly using =nix run=.
+
+#+begin_src bash
+  nix run github:Krizdano/toki -- --help
+#+end_src
+
+If you don't have flakes enabled, run
+
+#+begin_src bash
+nix run --extra-experimental-features "flakes nix-command" github:Krizdano/toki
+#+end_src
+
+*** Nix Shell
+Try it inside a =nix shell=.
+
+#+begin_src bash
+  nix shell github:Krizdano/toki
+#+end_src
+
+If you don't have flakes enabled, run
+
+#+begin_src bash
+nix shell --extra-experimental-features "flakes nix-command" github:Krizdano/toki
+#+end_src
+
+*** Nix Profile
+Install it using =nix profile=.
+
+#+begin_src bash
+  nix profile install github:Krizdano/toki
+#+end_src
+
+If you don't have flakes enabled, run
+
+#+begin_src bash
+  nix profile install --extra-experimental-features "flakes nix-command" github:Krizdano/toki
+#+end_src
