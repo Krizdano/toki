@@ -55,7 +55,7 @@ If you want to build with flakes support run
 Run it directly using =nix run=.
 
 #+begin_src bash
-  nix run github:Krizdano/toki -- --help
+  nix run github:Krizdano/toki
 #+end_src
 
 If you don't have flakes enabled, run
