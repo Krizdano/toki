@@ -76,6 +76,7 @@ void GenFlake(const char directory[], const char type[], const char packages[]) 
   FileSpec file[] = {
     {"c", "flake.nix", "gdb gcc gnumake"},
     {"asm", "flake.nix", "nasm gdb gnumake"},
+    {"fasm", "flake.nix", "fasm gdb gnumake"},
     {"generic", "flake.nix", packages },
   };
 
@@ -169,9 +170,31 @@ void GenMain(const char directory[], const char type[]) {
     "\tsyscall\n"
     ;
 
+  mainfile.fasm =
+    "format ELF64 executable 3\n"
+    "entry start\n"
+    "\n"
+    "segment readable executable\n"
+    "start:\n"
+    "       mov  rax, 1\n"
+    "       mov  rdi, 1\n"
+    "       mov  rsi, hello\n"
+    "       mov  rdx, msg_size\n"
+    "       syscall\n"
+    "\n"
+    "       mov rax, 60\n"
+    "       mov rdi, 0\n"
+    "       syscall\n"
+    "\n"
+    "segment readable writable\n"
+    "hello db \"Hello world!\",10\n"
+    "msg_size = $ - hello\n"
+      ;
+
   FileSpec file[] = {
     {"c", "main.c", mainfile.c },
     {"asm", "main.asm", mainfile.assembly },
+    {"fasm", "main.asm", mainfile.fasm },
   };
 
   size_t file_length = sizeof(file)/sizeof(file[0]);
@@ -272,9 +295,47 @@ void GenMake(const char directory[], const char type[]) {
     "\t@:\n"
     ;
 
+  makefile.fasm =
+    "AS=fasm\n"
+    "LD=ld\n"
+    "AFLAGS=-s\n"
+    "OBJ=build/obj\n"
+    "PWD=$(shell pwd)\n"
+    "ELF=$(shell basename $(PWD))\n"
+    "BIN=build/bin/$(ELF)\n"
+    "SRCS=$(shell find src/ -type f -name '*.asm')\n"
+    "OBJS=$(patsubst src/%.asm, build/obj/%.o, $(SRCS))\n"
+    "RM=rm -rf\n"
+    "\n"
+    "default: all\n"
+    "\n"
+    "install: all\n"
+    "\n"
+    "build: all\n"
+    "\n"
+    "debug: all\n"
+    "\tgdb $(BIN)\n"
+    "\n"
+    "run: all\n"
+    "\t@./$(BIN) $(filter-out $@,$(MAKECMDGOALS))\n"
+    "\n"
+    "all: $(BIN)\n"
+    "\n"
+    "$(BIN): $(SRCS)\n"
+    "\t@mkdir -p $(dir $@)\n"
+    "\t$(AS) $< $(BIN)\n"
+    "\n"
+    "clean:\n"
+    "\t$(RM) build/bin/* build/obj/*\n"
+    "\n"
+    "%:\n"
+    "\t@:\n"
+    ;
+
   FileSpec file[] = {
     {"c", "Makefile", makefile.c},
     {"asm", "Makefile", makefile.assembly},
+    {"fasm", "Makefile", makefile.fasm},
   };
 
 

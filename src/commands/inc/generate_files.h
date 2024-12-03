@@ -20,6 +20,7 @@ typedef struct {
 typedef struct {
   const char *assembly;
   const char *c;
+  const char *fasm;
 } Content;
 
 #endif // !GENERATE_FILES_H
