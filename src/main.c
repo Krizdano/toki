@@ -21,9 +21,9 @@ typedef struct {
 } Args;
 
 /*
- * main - Main entry point of the command-line application.
- * @argc - The number of command-line arguments.
- * @argv - The array of command-line arguments.
+ * main - Main entry point of the command-line application. It take two arguments.
+ * argc - The number of command-line arguments.
+ * argv - The array of command-line arguments.
  *
  * This function processes command-line arguments, checks for valid commands,
  * and invokes the corresponding functions. If no valid command is provided,

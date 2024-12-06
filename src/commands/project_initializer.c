@@ -8,14 +8,25 @@
 #include "inc/generate_files.h"
 #include "inc/options.h"
 
-const size_t MAX_PROJECT_LENGTH = 50;
+const size_t MAX_PROJECT_LENGTH = 50; /* Maximum allowed length for project names */
 
-// create new projects
+/**
+ * Create a new project based on command line arguments.
+ *
+ * This function initializes a new project directory structure, including
+ * subdirectories for source files, build files, binaries, and object files.
+ * It also generates a Makefile, a main source file and an optional flake.nix
+ * file based on the specified project type (C or assembly).
+ *
+ * The project name is expected to be the third argument (argv[2]).
+ * If no project name is provided or if the project name exceeds the
+ * maximum length, an error message will be printed and the program will exit.
+ */
 void newProject(const char *argv[]) {
 
   const char *project_name = argv[2];
   const char *cwd = ".";
-  char *type = NULL;
+  char *type = NULL; /* Variable to hold the project type (eg "c" "asm") */
 
   if (project_name == NULL) {
     fprintf(stderr, "Error: no name provided for the project\n");
@@ -61,6 +72,7 @@ void newProject(const char *argv[]) {
   GenMake(cwd, type);
   GenMain(cwd, type);
 
+  /* Generate flake.nix and enable direnv if flake support is enabled */
 #ifdef FLAKE_SUPPORT
   GenFlake(".", type, NULL);
   EnableDirenv();
@@ -72,6 +84,10 @@ void newProject(const char *argv[]) {
 }
 
 #ifdef FLAKE_SUPPORT
+/**
+ * This function creates a .envrc file for direnv that specifies which files to watch
+ * for changes and sets up the environment using the specified flake.
+ */
 void EnableDirenv(void) {
 
   char direnv_allow[] = "direnv allow";
@@ -93,6 +109,13 @@ void EnableDirenv(void) {
 }
 #endif /* ifdef FLAKE_SUPPORT */
 
+/**
+ * Initialize a Git repository for the project.
+ *
+ * This function sets up a new Git repository in the current project directory,
+ * creates a .gitignore file to exclude certain files from version control,
+ * and optionally adds a flake.nix file to the repository if Flake support is enabled.
+ */
 void initGit(void) {
 
   char gitinit[] = "git init -q -b main";
