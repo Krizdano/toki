@@ -9,6 +9,18 @@
 
 const int MAX_PATH_SIZE = 1024;
 
+/**
+ * GenerateFiles - Generates files based on the provided command line arguments.
+ *
+ * @argv: An array of command line arguments. The expected format is:
+ *        argv[0] - program name
+ *        argv[1] - command (should be "gen")
+ *        argv[2] - file type (e.g., "flake" or "makefile")
+ *        argv[3] - type of the file to generate (e.g., "c", "asm", etc.)
+ *
+ * This function checks the validity of the arguments and calls the appropriate
+ * file generation function based on the specified file type.
+ */
 void GenerateFiles(const char *argv[]) {
 
   const char *file_type = argv[2];
@@ -71,6 +83,16 @@ void GenerateFiles(const char *argv[]) {
 }
 
 #ifdef FLAKE_SUPPORT
+/**
+ * GenFlake - Generates a flake.nix file based on the specified type and packages.
+ *
+ * @directory: The directory where the flake.nix file will be created.
+ * @type: The type of flake to generate (e.g., "c", "asm", "fasm", "generic").
+ * @packages: A string containing additional packages to include in the flake.
+ *
+ * This function constructs the contents of a flake.nix file and calls
+ * createFile to write it to the specified directory.
+ */
 void GenFlake(const char directory[], const char type[], const char packages[]) {
 
   FileSpec file[] = {
@@ -130,6 +152,15 @@ void GenFlake(const char directory[], const char type[], const char packages[]) 
 }
 #endif /* ifdef FLAKE_SUPPORT */
 
+/**
+ * GenMain - Generates a main source file based on the specified type.
+ *
+ * @directory: The directory where the main source file will be created.
+ * @type: The type of source file to generate (e.g., "c", "asm", "fasm").
+ *
+ * This function constructs the contents of a main source file and calls
+ * createFile to write it to the specified directory.
+ */
 void GenMain(const char directory[], const char type[]) {
 
   Content mainfile = {NULL};
@@ -209,8 +240,15 @@ void GenMain(const char directory[], const char type[]) {
   fprintf(stderr, "error generating mainfile: unknown option %s", type);
   exit(1);
 }
-
-
+/**
+ * GenMake - Generates a Makefile based on the specified type.
+ *
+ * @directory: The directory where the Makefile will be created.
+ * @type: The type of Makefile to generate (e.g., "c", "asm", "fasm").
+ *
+ * This function constructs the contents of a Makefile and calls
+ * createFile to write it to the specified directory.
+ */
 void GenMake(const char directory[], const char type[]) {
 
   Content makefile = {NULL};
@@ -352,7 +390,14 @@ void GenMake(const char directory[], const char type[]) {
   exit(1);
 }
 
-
+/* CreatDirectory - Create a directory at the specified path.
+ * @root_dir: The root directory where the new directory will be created.
+ *           If NULL, the new directory will be created in the current working directory.
+ * @directory_name: The name of the directory to create.
+ * This function constructs the full path for the new directory and attempts to create it
+ * with read, write, and execute permissions for the user, group, and others.
+ * If the directory creation fails, an error message is printed to stderr and the program exits.
+ */
 void createDirectory(const char root_dir[], const char directory_name[]) {
 
   char path[MAX_PATH_SIZE];
@@ -369,6 +414,17 @@ void createDirectory(const char root_dir[], const char directory_name[]) {
   }
 }
 
+/* CreateFile - Create a file in the specified directory with the given content.
+ * @root_dir: The root directory where the file will be created.
+ *           If NULL, the file will be created in the specified sub_directory.
+ * @sub_directory: The sub-directory where the file will be created.
+ * @filename: The name of the file to create.
+ * @permission: The file permission mode (e.g., "w" for write).
+ * @content: The content to write to the file.
+ * This function constructs the full path for the new file and attempts to create it.
+ * If the file creation fails, an error message is printed to stderr and the program exits.
+ * The content is written to the file before closing it.
+ */
 void createFile(const char root_dir[], const char sub_directory[], const char filename[], const char permission[], const char content[]) {
 
   char path[MAX_PATH_SIZE];
